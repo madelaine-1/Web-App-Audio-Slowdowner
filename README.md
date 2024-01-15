@@ -5,6 +5,7 @@ This project is a web app that allows you to slow down, change the pitch and cre
 ## Prerequisites
 
 In order to run this project on your local machine, you will need to download the dependancies using npm. cd into the project directory and run the following commands:
+
 ```cd slowdowner-frontend```
 
 ```npm install```
@@ -17,9 +18,9 @@ and navigate to [http://localhost:3000/](http://localhost:3000/) in your browser
 
 ## Build with
 
-> [React](https://reactjs.org/) - A JavaScript library for building user interfaces
-> [Tone.js](https://tonejs.github.io/) - A Web Audio framework for creating interactive music in the browser
-> [styled-components](https://styled-components.com/) - A CSS-in-JS library for React
+* [React](https://reactjs.org/) - A JavaScript library for building user interfaces
+* [Tone.js](https://tonejs.github.io/) - A Web Audio framework for creating interactive music in the browser
+* [styled-components](https://styled-components.com/) - A CSS-in-JS library for React
 
 ## License
 
