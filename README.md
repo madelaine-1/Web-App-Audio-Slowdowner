@@ -4,7 +4,9 @@ This project is a web app that allows you to slow down, change the pitch and cre
 
 ## Prerequisites
 
-In order to run this project on your local machine, you will need to download the dependancies using npm. cd into the project directory and run the following commands:
+### Frontend
+
+In order to run this project on your local machine, you will need to download the dependancies using npm for the frontend. To do this, cd into the project directory and run the following commands:
 
 ```cd slowdowner-frontend```
 
@@ -16,11 +18,24 @@ This should give you all the dependancies you need to run the project in its cur
 
 and navigate to [http://localhost:3000/](http://localhost:3000/) in your browser.
 
+### Backend
+
+The backend is currently in development. To run the backend, cd into the project directory and run the following commands:
+
+```cd slowdowner-backend```
+
+```pip install -r requirements.txt```
+
+Now, to run the backend, run the following command:
+
+```uvicorn main:app --reload```
+
 ## Build with
 
 * [React](https://reactjs.org/) - A JavaScript library for building user interfaces
 * [Tone.js](https://tonejs.github.io/) - A Web Audio framework for creating interactive music in the browser
 * [styled-components](https://styled-components.com/) - A CSS-in-JS library for React
+* [FastAPI](https://fastapi.tiangolo.com/) - A modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints
 
 ## License
 
