@@ -1,62 +1,72 @@
-import { FC, useState, ChangeEvent, useEffect } from 'react';
+import React, { FC, useState, ChangeEvent, useEffect } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/sharedStyles';
+import Directory from '../components/Directory';
+import File from '../components/File';
 
-const CLIENT_ID = "1726e00b548a4be2862335f14f754d0a";
-const CLIENT_SECRET = "69eef0a99bac4a718a115717b3be72ff";
+// const CLIENT_ID = "1726e00b548a4be2862335f14f754d0a";
+// const CLIENT_SECRET = "69eef0a99bac4a718a115717b3be72ff";
 
 const Homepage: FC = () => {
     const [accessToken, setAccessToken] = useState('');
     const [searchInput, setSearchInput] = useState<string>("");
+    const [topDirectory, setTopDirectory] = useState<FileSystemDirectoryHandle | null>(null);
+    const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
 
     useEffect(() => {
-        const fetchAccessToken = async () => {
+        const fetchChildren = async () => {
             try {
-                // API access token
-                const authParameters = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
-                };
-
-                const response = await fetch("https://accounts.spotify.com/api/token", authParameters);
-                const data = await response.json();
-
-                setAccessToken(data.access_token);
-            } catch (error) {
-                console.error('Error fetching access token:', error);
+                if (topDirectory) {
+                    const entries = [];
+                    for await (const entry of (topDirectory as any).values()) {
+                        entries.push(entry);
+                    }
+                    setChildren(entries);
+                }
+            } catch (err) {
+                console.error('Error fetching children:', err);
             }
         };
+    
+        fetchChildren();
+    }, [topDirectory]);
 
-        fetchAccessToken();
-    }, []);
-
-    const handleSubmit = () => {};
+    const selectDirectory = async () => {
+        try {
+            const directoryHandle = await (window as any).showDirectoryPicker();
+            setTopDirectory(directoryHandle);
+        } catch (err) {
+            console.error('Error accessing file system:', err);
+        }
+    };
 
     return (
         <StyledHomepage>
-            <StyledSearchBox onSubmit={handleSubmit}>
+            <StyledSearchBox>
                 <StyledContentBox 
                     type="text" 
                     placeholder={"Search"}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchInput(event.target.value)}
                 />
-                <NewButton type="submit">Search</NewButton>
+                <NewButton onClick={selectDirectory}>Select a Folder</NewButton>
             </StyledSearchBox>
-            <StyledSongContainer></StyledSongContainer>
+            <StyledSongContainer>
+                {children && children.map((entry: any) => entry.kind === 'file' ? <File file={entry}/> : <Directory directory={entry} />)}
+            </StyledSongContainer>
         </StyledHomepage>
     );
 }
 
 const StyledHomepage = styled.div`
     background-color: darkblue;
-    height: 300vh;
+    height: 100vh;
     width: 100vw;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
 `;
 
-const StyledSearchBox = styled.form`
+const StyledSearchBox = styled.div`
     background-color: green;
     position: fixed;
     top: 0;
@@ -83,10 +93,9 @@ const NewButton = styled(StyledButton)`
 `;
 
 const StyledSongContainer = styled.div`
-    margin-top: 7%;
-    width: 100%;
-    display: grid;
-    
+    margin-top: 12vh;
+    width: 70%;
+    display: block;
 `;
 
 export default Homepage;

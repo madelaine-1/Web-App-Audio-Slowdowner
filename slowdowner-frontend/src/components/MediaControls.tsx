@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent, KeyboardEvent, useEffect } from 'react';
+import React, { FC, useState, ChangeEvent, KeyboardEvent, useEffect } from 'react';
 import { GrainPlayer } from 'tone';
 import * as Tone from 'tone';
 import styled from 'styled-components';
