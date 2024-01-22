@@ -105,9 +105,7 @@ const MediaControls: FC<MediaControlsProps> = ({ player, songLength }) => {
       <StyledButtonContainer>
         <StyledButton onClick={handleRestart}>Restart</StyledButton>
         <StyledButton onClick={handleSkipBackward}>Skip Back</StyledButton>
-        <StyledButton onClick={handlePause} onKeyPress={event => {
-
-        }}>Pause</StyledButton>
+        <StyledButton onClick={handlePause}>Pause</StyledButton>
         <StyledButton onClick={handleSkipForward}>Skip Forward</StyledButton>
       </StyledButtonContainer>
     </StyledMediaControls>

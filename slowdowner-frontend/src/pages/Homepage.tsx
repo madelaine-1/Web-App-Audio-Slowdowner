@@ -4,11 +4,7 @@ import { StyledButton } from '../styles/sharedStyles';
 import Directory from '../components/Directory';
 import File from '../components/File';
 
-// const CLIENT_ID = "1726e00b548a4be2862335f14f754d0a";
-// const CLIENT_SECRET = "69eef0a99bac4a718a115717b3be72ff";
-
 const Homepage: FC = () => {
-    const [accessToken, setAccessToken] = useState('');
     const [searchInput, setSearchInput] = useState<string>("");
     const [topDirectory, setTopDirectory] = useState<FileSystemDirectoryHandle | null>(null);
     const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
