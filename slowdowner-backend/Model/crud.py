@@ -15,7 +15,12 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def create_user(db: Session, user: schemas.UserCreate):
     hashed_password = user.password     # make sure to implement password security later
-    new_user = models.User(username=user.username, email=user.email, password=hashed_password)
+    new_user = models.User(
+        username=user.username, 
+        email=user.email, 
+        password=hashed_password,
+        rootDirectory=user.username,
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

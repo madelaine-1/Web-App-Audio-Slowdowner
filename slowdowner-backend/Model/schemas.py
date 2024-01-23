@@ -13,7 +13,7 @@ class Song(SongBase):
     user_id: int
 
     class Config:
-        orm_mode = True
+        from_attribute = True
 
 class UserBase(BaseModel):
     username: str
@@ -29,4 +29,4 @@ class User(UserBase):
     songs: list[Song] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True

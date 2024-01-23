@@ -10,7 +10,7 @@ class User(Base):
     email = Column(String, index=True)
     username = Column(String, index=True)
     password = Column(String, index=True)
-    rootDirectory = Column(String, index=True)
+    rootDirectory = Column(String, index=True, default=username)
     isActive = Column(Boolean, index=True, default=True)
 
     songs = relationship("Song", back_populates="owner")
