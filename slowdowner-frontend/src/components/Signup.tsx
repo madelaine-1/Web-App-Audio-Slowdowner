@@ -1,10 +1,17 @@
 import React, { FC,useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
 import { SERVER_URL } from "../shared functions/constants";
 
-const Signup: FC = () => {
+interface SignupProps {
+    setToken: Function
+}
+
+const Signup: FC<SignupProps> = ({ setToken }) => {
+    const navigate = useNavigate();
+
     // user inputs
     const [username, setUsername] = useState<string>("");
     const [email, setEmail] = useState<string>("");
@@ -20,11 +27,15 @@ const Signup: FC = () => {
 
         if(!verifyUserInput()) { return }
 
-        axios.post(SERVER_URL+"/users/", {username, email, password})
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
+        axios.post(`${SERVER_URL}/users/`, {username, email, password})
+            .then(res => {
+                console.log(res.data);
+                setToken(res.data.access_token);
+                navigate('/home');
+            })
+            .catch(error => {
+                console.error(error);
+            });
     };
 
     const verifyUserInput = (): boolean => {

@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 #Dependency
 def get_db():
@@ -42,17 +42,17 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(db, user=user) 
 
-# # User logs in
-# @app.post("/login/", response_model=dict)
-# async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
-#     user = crud.get_user_by_username(db, form_data.username)
-#     if not user:
-#         raise HTTPException(status_code=400, detail="Incorrect username or password")
-#     hashed_password = form_data.password
-#     if not hashed_password == user.password:
-#         raise HTTPException(status_code=400, detail="Incorrect username or password")
+# User logs in
+@app.post("/login/", response_model=dict)
+async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+    user = crud.get_user_by_username(db, form_data.username)
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    hashed_password = form_data.password
+    if not hashed_password == user.password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
     
-#     return {"access_token": user.username, "token_type": "bearer"}
+    return {"access_token": user.username, "token_type": "bearer"}
 
 # returns a list of all users
 @app.get("/users/", response_model=list[schemas.User])

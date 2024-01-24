@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
 
-interface LoginProps {
+interface LoginpageProps {
     setToken: Function
 }
 
-const Loginpage: FC<LoginProps> = (setToken) => {
+const Loginpage: FC<LoginpageProps> = ({ setToken }) => {
 
 
     return (
         <StyledLoginPage>
             <Routes>
-                <Route path="/login" element={<Login />}></Route>
-                <Route path="/signup" element={<Signup />}></Route>
+                <Route path="/login" element={<Login setToken={setToken}/>}></Route>
+                <Route path="/signup" element={<Signup setToken={setToken}/>}></Route>
             </Routes>
         </StyledLoginPage>
     );
