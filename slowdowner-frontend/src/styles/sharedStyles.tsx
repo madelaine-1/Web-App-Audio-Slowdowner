@@ -36,3 +36,51 @@ export const StyledSliderIndexBox = styled.div`
     justify-content: space-between;
     color: white;
 `;
+
+export const StyledLoginContainer = styled.form`
+    background-color: white;
+    height: 75vh;
+    width: 35vw;
+    border-radius: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    h1 {
+        height: 10%;
+    }
+
+    label { 
+        height: 25%;
+        width: 80%;
+        display: grid;
+        align-items: start;
+        justify-items: center;
+        grid-template-rows: auto auto auto 1fr; 
+
+        p {
+            justify-self: left;
+            align-self: flex-start;
+            margin: 0; 
+            flex-grow: 1;
+        }
+
+        input {
+            height: 2vh;
+            width: 100%;
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+        
+        input:focus {
+            border-color: #66afe9;
+            outline: 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,.1), 0 0 8px rgba(102, 175, 233, .6);
+        }
+    }
+`;

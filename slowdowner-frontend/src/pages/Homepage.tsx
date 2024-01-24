@@ -1,39 +1,34 @@
-import React, { FC, useState, ChangeEvent, useEffect } from 'react';
+import React, { FC, useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/sharedStyles';
-import Directory from '../components/Directory';
-import File from '../components/File';
+// import Directory from '../components/Directory';
+// import File from '../components/File';
 
 const Homepage: FC = () => {
     const [searchInput, setSearchInput] = useState<string>("");
-    const [topDirectory, setTopDirectory] = useState<FileSystemDirectoryHandle | null>(null);
-    const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
+    //const [topDirectory, setTopDirectory] = useState<FileSystemDirectoryHandle | null>(null);
+    //const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
 
-    useEffect(() => {
-        const fetchChildren = async () => {
-            try {
-                if (topDirectory) {
-                    const entries = [];
-                    for await (const entry of (topDirectory as any).values()) {
-                        entries.push(entry);
-                    }
-                    setChildren(entries);
-                }
-            } catch (err) {
-                console.error('Error fetching children:', err);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchChildren = async () => {
+    //         try {
+    //             if (topDirectory) {
+    //                 const entries = [];
+    //                 for await (const entry of (topDirectory as any).values()) {
+    //                     entries.push(entry);
+    //                 }
+    //                 setChildren(entries);
+    //             }
+    //         } catch (err) {
+    //             console.error('Error fetching children:', err);
+    //         }
+    //     };
     
-        fetchChildren();
-    }, [topDirectory]);
+    //     fetchChildren();
+    // }, [topDirectory]);
 
     const selectDirectory = async () => {
-        try {
-            const directoryHandle = await (window as any).showDirectoryPicker();
-            setTopDirectory(directoryHandle);
-        } catch (err) {
-            console.error('Error accessing file system:', err);
-        }
+        
     };
 
     return (
@@ -47,7 +42,7 @@ const Homepage: FC = () => {
                 <NewButton onClick={selectDirectory}>Select a Folder</NewButton>
             </StyledSearchBox>
             <StyledSongContainer>
-                {children && children.map((entry: any) => entry.kind === 'file' ? <File file={entry}/> : <Directory directory={entry} />)}
+        
             </StyledSongContainer>
         </StyledHomepage>
     );
