@@ -1,4 +1,7 @@
-from fastapi import Depends, FastAPI, HTTPException
+from typing import Annotated
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -7,6 +10,16 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],
+)
+
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 #Dependency
 def get_db():
@@ -29,9 +42,21 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already registered")
     return crud.create_user(db, user=user) 
 
+# # User logs in
+# @app.post("/login/", response_model=dict)
+# async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+#     user = crud.get_user_by_username(db, form_data.username)
+#     if not user:
+#         raise HTTPException(status_code=400, detail="Incorrect username or password")
+#     hashed_password = form_data.password
+#     if not hashed_password == user.password:
+#         raise HTTPException(status_code=400, detail="Incorrect username or password")
+    
+#     return {"access_token": user.username, "token_type": "bearer"}
+
 # returns a list of all users
 @app.get("/users/", response_model=list[schemas.User])
-def read_users(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
+async def read_users(skip: int = 0, limit: int = 50, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 

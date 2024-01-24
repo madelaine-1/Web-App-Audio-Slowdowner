@@ -20,7 +20,7 @@ const Signup: FC = () => {
 
         if(!verifyUserInput()) { return }
 
-        axios.post(SERVER_URL, {username, email, password})
+        axios.post(SERVER_URL+"/users/", {username, email, password})
         .then(res => {
             console.log(res);
             console.log(res.data);
