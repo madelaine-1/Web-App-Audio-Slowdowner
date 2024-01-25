@@ -1,19 +1,5 @@
 from pydantic import BaseModel
-
-class SongBase(BaseModel):
-    name: str
-    artist: str
-    filePath: str
-
-class SongCreate(SongBase):
-    pass
-
-class Song(SongBase):
-    id: int
-    user_id: int
-
-    class Config:
-        from_attribute = True
+from .songs import Song
 
 class UserBase(BaseModel):
     username: str
