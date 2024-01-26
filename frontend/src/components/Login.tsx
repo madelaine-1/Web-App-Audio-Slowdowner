@@ -1,7 +1,6 @@
 import React, { FC, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
 import { SERVER_URL } from "../shared functions/constants";
 
@@ -23,16 +22,21 @@ const Login: FC<LoginProps> = ({ setToken }) => {
         formData.append('username', username);
         formData.append('password', password);
     
-        axios.post(`${SERVER_URL}/login/`, formData)
+        axios({
+            method: 'post',
+            url: `${SERVER_URL}/users/token/`, 
+            data: formData,
+            
+        })
             .then(res => {
                 console.log(res.data);
                 setToken(res.data.access_token);
-                navigate("/home");
+                navigate('/home');
             })
             .catch(error => {
-                setPasswordIncorrect(true);
                 console.error(error);
-            });
+            }
+        );
     };
 
     return (

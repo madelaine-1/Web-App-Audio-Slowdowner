@@ -21,10 +21,10 @@ def hash_password(password: str):
     return bcrypt_context.hash(password)
 
 def authenticate_user(username: str, password: str, db: Session):
-    user = db.query(models.User).filter(models.User.username == username)
+    user = db.query(models.User).filter(models.User.username == username).first()
     if not user:
         return False
-    if not bcrypt_context.verify(password, user.hashed_password):
+    if not bcrypt_context.verify(password, user.password):
         return False
     return user
 
@@ -32,6 +32,6 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta):
     encode = {"sub": username, "id": user_id}
     expires = datetime.utcnow() + expires_delta
     encode.update({'exp': expires})
-    return jwt.encode(encode, SECRET_KEY, algorythm=ALGORYTHM)
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORYTHM)
 
 

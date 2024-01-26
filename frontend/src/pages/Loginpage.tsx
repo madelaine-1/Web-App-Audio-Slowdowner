@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
@@ -15,7 +15,8 @@ const Loginpage: FC<LoginpageProps> = ({ setToken }) => {
         <StyledLoginPage>
             <Routes>
                 <Route path="/login" element={<Login setToken={setToken}/>}></Route>
-                <Route path="/signup" element={<Signup setToken={setToken}/>}></Route>
+                <Route path="/signup" element={<Signup/>}></Route>
+                <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
         </StyledLoginPage>
     );

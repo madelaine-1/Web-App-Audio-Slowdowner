@@ -1,15 +1,11 @@
 import React, { FC,useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-
+import qs from 'qs'
 import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
 import { SERVER_URL } from "../shared functions/constants";
 
-interface SignupProps {
-    setToken: Function
-}
-
-const Signup: FC<SignupProps> = ({ setToken }) => {
+const Signup: FC = () => {
     const navigate = useNavigate();
 
     // user inputs
@@ -27,15 +23,23 @@ const Signup: FC<SignupProps> = ({ setToken }) => {
 
         if(!verifyUserInput()) { return }
 
-        axios.post(`${SERVER_URL}/users/`, {username, email, password})
+        axios({
+            method: 'post',
+            url: `${SERVER_URL}/users/`, 
+            data: {
+                username: username, 
+                email: email, 
+                password: password
+            },
+        })
             .then(res => {
                 console.log(res.data);
-                setToken(res.data.access_token);
-                navigate('/home');
+                navigate('/login');
             })
             .catch(error => {
                 console.error(error);
-            });
+            }
+        );
     };
 
     const verifyUserInput = (): boolean => {

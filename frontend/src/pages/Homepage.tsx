@@ -1,6 +1,7 @@
 import React, { FC, useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/sharedStyles';
+import FileUpload from '../components/FileUpload';
 // import Directory from '../components/Directory';
 // import File from '../components/File';
 
@@ -41,8 +42,9 @@ const Homepage: FC = () => {
                 />
                 <NewButton onClick={selectDirectory}>Select a Folder</NewButton>
             </StyledSearchBox>
+            <FileUpload></FileUpload>
             <StyledSongContainer>
-        
+
             </StyledSongContainer>
         </StyledHomepage>
     );
@@ -58,7 +60,6 @@ const StyledHomepage = styled.div`
 `;
 
 const StyledSearchBox = styled.div`
-    background-color: green;
     position: fixed;
     top: 0;
     width: 100%;
