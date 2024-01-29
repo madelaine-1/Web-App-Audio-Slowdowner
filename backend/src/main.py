@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .models import models
 from .database import engine
 from .routers import users
+from .routers import songs
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -17,3 +18,4 @@ app.add_middleware(
 )
 
 app.include_router(users.router)
+app.include_router(songs.router)

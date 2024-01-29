@@ -1,28 +1,25 @@
-from fastapi import APIRouter, Depends
-from ..schemas import songs as schema
+from fastapi import APIRouter, Depends, UploadFile
 from sqlalchemy.orm import Session
+from ..schemas import songs as songsSchema
+from ..schemas import users as usersSchema
 from ..dependancies import get_db
+from ..services import auth
 
 router = APIRouter(
     prefix="/songs",
     tags=["songs"],
-    responses={404: {"description": "Song not found"}},
+    dependencies=[Depends(auth.get_current_user)]
 )
 
-# # get users songs
-# @router.get("/", response_model=list[songs.Song])
-# async def read_songs(db: Session = Depends(get_db)):
 
+@router.get("/", response_model=None)
+async def get_users_songs(
+    current_user: usersSchema.User,
+    db: Session = Depends(get_db)):
+    return {"username": current_user.username}
 
-# # gets song by id
-# @router.get("/{song_id}")
-
-
-# # delete a song
-# @router.delete("/{song_id}")
-
-# # add a song
-# @router.post("/")
-
-# # edit a song
-# @router.put("/{song_id}")
+# @router.post("/{file_path}")
+# async def upload_song(file: UploadFile, 
+#                       current_user: usersSchema.User = Depends[usersSchema.User, auth.get_current_user], 
+#                       db: Session = Depends(get_db)):
+#     return file
