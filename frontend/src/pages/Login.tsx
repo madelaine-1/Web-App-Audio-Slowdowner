@@ -3,12 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
 import { SERVER_URL } from "../shared functions/constants";
+import Cookies from 'js-cookie';
 
-interface LoginProps {
-    setToken: Function
-}
-
-const Login: FC<LoginProps> = ({ setToken }) => {
+const Login: FC = () => {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState<string>("");
@@ -28,15 +25,14 @@ const Login: FC<LoginProps> = ({ setToken }) => {
             data: formData,
             
         })
-            .then(res => {
-                console.log(res.data);
-                setToken(res.data.access_token);
-                navigate('/home');
-            })
-            .catch(error => {
-                console.error(error);
-            }
-        );
+        .then(res => {
+            console.log(res.data);
+            Cookies.set('token', res.data.access_token);
+            navigate('/home');
+        })
+        .catch(error => {
+            console.error(error);
+        });
     };
 
     return (

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Body
 from ..schemas import users as usersSchema
 from ..schemas import auth as authSchema
 from sqlalchemy.orm import Session
@@ -17,14 +17,14 @@ router = APIRouter(
 )
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user: usersSchema.UserCreate, db: Session = Depends(get_db)) -> usersSchema.User:
+def create_user(user: usersSchema.UserCreate, db: Session = Depends(get_db)):
     db_user_email = user_services.get_user_by_email(db, email=user.email)
     if db_user_email:
         raise HTTPException(status_code=400, detail="Email already registered.")
     db_user_username = user_services.get_user_by_username(db, username=user.username)
     if db_user_username:
         raise HTTPException(status_code=400, detail="Username already exists.")
-    return user_services.create_user(db, user=user)
+    user_services.create_user(db, user=user)
 
 @router.post("/token", response_model=authSchema.Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
@@ -43,6 +43,14 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     )
     return authSchema.Token(access_token=access_token, token_type="bearer")
 
+@router.post("/validate-token", status_code=status.HTTP_202_ACCEPTED)
+async def validate_token(token: str = Body(...)):
+    isValid = False
+    user = auth.get_current_user(token=token, db=Session)
+    if user:
+        isValid = True
+    return {'isValid': isValid}
+
 @router.get("/", response_model=list[usersSchema.User])
 def get_users(db: Session = Depends(get_db)) -> list[usersSchema.User]:
     db_users = user_services.get_users(db)
@@ -54,3 +62,8 @@ def delete_user(user_id: int, db: Session = Depends(get_db)) -> usersSchema.User
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found.")
     return user_services.delete_user(db, db_user)
+
+@router.get("/current", response_model=str)
+def get_current_user(current_user: Annotated[usersSchema.User, Depends(auth.get_current_user)]):
+    return current_user.username
+

@@ -2,6 +2,9 @@ import React, { FC, useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/sharedStyles';
 import FileUpload from '../components/FileUpload';
+import axios from 'axios';
+import { SERVER_URL } from '../shared functions/constants';
+import Cookies from 'js-cookie';
 // import Directory from '../components/Directory';
 // import File from '../components/File';
 
@@ -32,6 +35,21 @@ const Homepage: FC = () => {
         
     };
 
+    const handleUpload = async () => {
+        axios.get(`${SERVER_URL}/users/current`, {
+            headers: {
+                'Authorization': `Bearer ${Cookies.get("token")}`
+            }
+        })
+        .then(res => {
+            console.log(res);
+            console.log(res.data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
     return (
         <StyledHomepage>
             <StyledSearchBox>
@@ -40,7 +58,7 @@ const Homepage: FC = () => {
                     placeholder={"Search"}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchInput(event.target.value)}
                 />
-                <NewButton onClick={selectDirectory}>Select a Folder</NewButton>
+                <NewButton onClick={handleUpload}>Select a Folder</NewButton>
             </StyledSearchBox>
             <FileUpload></FileUpload>
             <StyledSongContainer>
