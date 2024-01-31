@@ -1,42 +1,21 @@
 import React, { FC, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
-import { SERVER_URL } from "../shared functions/constants";
-import Cookies from 'js-cookie';
+import { StyledButton, StyledForm } from '../styles/sharedStyles';
+import { getUserToken } from "../shared functions/sharedFunctions";
 
 const Login: FC = () => {
-    const navigate = useNavigate();
-
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [passwordIncorrect, setPasswordIncorrect] = useState<boolean>(false)
+    const [passwordIncorrect, setPasswordIncorrect] = useState<boolean>(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // Logs user in and gives
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
     
-        const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
-    
-        axios({
-            method: 'post',
-            url: `${SERVER_URL}/users/token/`, 
-            data: formData,
-            
-        })
-        .then(res => {
-            console.log(res.data);
-            Cookies.set('token', res.data.access_token);
-            navigate('/home');
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        setPasswordIncorrect(await getUserToken(username, password));
     };
 
     return (
-        <StyledLoginContainer onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit}>
             <h1>Login</h1>
             <label>
                 <p>Username</p>
@@ -60,7 +39,7 @@ const Login: FC = () => {
             </label>
 
             <StyledButton type="submit">Submit</StyledButton>
-        </StyledLoginContainer>
+        </StyledForm>
     );
 };
 

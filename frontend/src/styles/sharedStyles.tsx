@@ -37,7 +37,7 @@ export const StyledSliderIndexBox = styled.div`
     color: white;
 `;
 
-export const StyledLoginContainer = styled.form`
+export const StyledForm = styled.form`
     background-color: white;
     height: 75vh;
     width: 35vw;

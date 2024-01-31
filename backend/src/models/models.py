@@ -21,6 +21,7 @@ class Song(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     artist = Column(String, index=True)
+    fileType = Column(String, index=True)
     filePath = Column(String, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
 

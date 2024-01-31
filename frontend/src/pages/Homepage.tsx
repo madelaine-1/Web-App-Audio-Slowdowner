@@ -1,41 +1,24 @@
-import React, { FC, useState, ChangeEvent } from 'react';
+import React, { FC, useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../styles/sharedStyles';
 import FileUpload from '../components/FileUpload';
 import axios from 'axios';
 import { SERVER_URL } from '../shared functions/constants';
 import Cookies from 'js-cookie';
-// import Directory from '../components/Directory';
-// import File from '../components/File';
+import File from '../components/File';
+
+type Song = {
+    name: string,
+    artist: string,
+    id: number
+}
 
 const Homepage: FC = () => {
     const [searchInput, setSearchInput] = useState<string>("");
-    //const [topDirectory, setTopDirectory] = useState<FileSystemDirectoryHandle | null>(null);
-    //const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
+    const [files, setFiles] = useState<Song[]>([]);
+    const [uploadFile, setUploadFile] = useState<boolean>(false);
 
-    // useEffect(() => {
-    //     const fetchChildren = async () => {
-    //         try {
-    //             if (topDirectory) {
-    //                 const entries = [];
-    //                 for await (const entry of (topDirectory as any).values()) {
-    //                     entries.push(entry);
-    //                 }
-    //                 setChildren(entries);
-    //             }
-    //         } catch (err) {
-    //             console.error('Error fetching children:', err);
-    //         }
-    //     };
-    
-    //     fetchChildren();
-    // }, [topDirectory]);
-
-    const selectDirectory = async () => {
-        
-    };
-
-    const handleUpload = async () => {
+    const getUser = async () => {
         axios.get(`${SERVER_URL}/users/current`, {
             headers: {
                 'Authorization': `Bearer ${Cookies.get("token")}`
@@ -50,19 +33,32 @@ const Homepage: FC = () => {
         });
     };
 
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: `${SERVER_URL}/songs/`,
+            headers: {
+                'Authorization': `Bearer ${Cookies.get("token")}`
+            }
+        })
+        .then(response => setFiles(response.data))
+        .catch(error => console.error(error));
+    }, []);
+
     return (
         <StyledHomepage>
             <StyledSearchBox>
                 <StyledContentBox 
                     type="text" 
+                    value={searchInput}
                     placeholder={"Search"}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchInput(event.target.value)}
                 />
-                <NewButton onClick={handleUpload}>Select a Folder</NewButton>
+                <StyledButton onClick={() => setUploadFile(true) }> Upload File</StyledButton>
             </StyledSearchBox>
-            <FileUpload></FileUpload>
+            {uploadFile && <FileUpload setUploadFile={setUploadFile}/>}
             <StyledSongContainer>
-
+                {files.map((file, index) => (<File key={index} filename={file.name} artist={file.artist} id={file.id} />))}
             </StyledSongContainer>
         </StyledHomepage>
     );

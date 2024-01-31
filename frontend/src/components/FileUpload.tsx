@@ -1,74 +1,108 @@
 import React, { FC, useState } from "react";
 import { StyledButton } from "../styles/sharedStyles";
 import styled from "styled-components";
-import { SERVER_URL } from "../shared functions/constants";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { uploadFile } from "../shared functions/sharedFunctions";
+import { StyledForm } from "../styles/sharedStyles";
+interface FileUploadProps {
+    setUploadFile: Function
+}
 
-const FileUpload:FC = () => {
+const FileUpload:FC<FileUploadProps> = ({setUploadFile}) => {
     const [name, setName] = useState<string>("");
     const [artist, setArtist] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
 
-
+    // uploads a new file to the server
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
-        const formData = new FormData();
-        formData.append("song_name", name);
-        formData.append("artist_name", artist)
-        if (file) {
-            formData.append('file', file);
-        } else {
-            return;
-        }
-
-        axios({
-            method: 'post',
-            url: `${SERVER_URL}/songs/`,
-            data: formData,
-            headers: {
-                'Authorization': `Bearer ${Cookies.get("token")}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+        await uploadFile(name, artist, file);
     };
 
     return (
-        <StyledFileUpload>
-            <form onSubmit={handleSubmit}>
+        <StyledUploadPage>
+            <StyledForm onSubmit={handleSubmit}>
                 <h1>Upload File Here</h1>
-                <input 
-                    type="text"
-                    placeholder="Enter the name of the song"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                />
-                <input 
-                    type="text"
-                    placeholder="Enter the name of the artist"
-                    value={artist}
-                    onChange={e => setArtist(e.target.value)}
-                />
-                <input 
-                    type="file"
-                    onChange={e => setFile(e.target.files ? e.target.files[0] : null)}
-                />
+                <label>
+                    <input 
+                        type="text"
+                        name="name"
+                        placeholder="Enter the name of the song"
+                        value={name}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                    />
+                </label>
+                <label>
+                    <input 
+                        type="text"
+                        name="artist"
+                        placeholder="Enter the name of the artist"
+                        value={artist}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setArtist(e.target.value)}
+                    />
+                </label>
+                <label>
+                    <StyledFileUpload 
+                        type="file"
+                        name="file"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFile(e.target.files ? e.target.files[0] : null)}
+                    />
+                </label>
+
                 <StyledButton type="submit">Upload</StyledButton>
-            </form>
-        </StyledFileUpload>
+            </StyledForm>
+
+            <StyledExitButton onClick={() => setUploadFile(false) }>x</StyledExitButton>
+        </StyledUploadPage>
     );
 };
 
-const StyledFileUpload = styled.div`
+const StyledUploadPage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+`;
 
+const StyledFileUpload = styled.input`
+    background-color: blue;
+    height: 8vh;
+    width: 10vw;
+    border: none;
+    border-radius: 2vh;
+    color: white;
+    font-weight: bolder;
+    transition-duration: 250ms;
+
+    &:hover {
+        background-color: rgb(0,0,200);
+        border: none;
+        border-radius: 2vh;
+        color: white;
+        font-weight: bolder;
+    }
+`;
+
+const StyledExitButton = styled.button`
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+
+    font-size: 50px;
+    color: white;
+    background-color: transparent;
+    border: none;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+        color: #AAA;
+    }
 `;
 
 export default FileUpload;

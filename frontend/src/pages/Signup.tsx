@@ -1,8 +1,7 @@
 import React, { FC,useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import qs from 'qs'
-import { StyledButton, StyledLoginContainer } from '../styles/sharedStyles';
+import { StyledButton, StyledForm } from '../styles/sharedStyles';
 import { SERVER_URL } from "../shared functions/constants";
 
 const Signup: FC = () => {
@@ -55,7 +54,7 @@ const Signup: FC = () => {
     };
 
     return (
-        <StyledLoginContainer onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit}>
             <h1>Sign up</h1>
             <label>
                 <p>Username</p>
@@ -102,7 +101,7 @@ const Signup: FC = () => {
 
 
             <StyledButton type="submit">Submit</StyledButton>
-        </StyledLoginContainer>
+        </StyledForm>
     );
 };
 

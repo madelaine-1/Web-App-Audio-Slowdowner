@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import Homepage from './pages/Homepage';
 import Songpage from './pages/Songpage';
 import Login from './pages/Login';
@@ -12,21 +12,18 @@ import axios from 'axios';
 function App() {
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
 
+  // check if token is valid
   useEffect(() => {
-    const token = Cookies.get("token");
-    if(token === undefined) {return;}
+    const access_token = Cookies.get("token");
+    if(access_token === undefined) {return;}
 
     axios({
       method: 'post',
       url: `${SERVER_URL}/users/validate-token/`,
-      data: token,
+      data: access_token,
     })
     .then(response => setIsValidToken(response.data.isValid))
     .catch(error => console.log(error))
-
-    // remove token when window is closed
-    window.addEventListener('beforeunload', () => Cookies.remove('token'));
-    return () => window.removeEventListener('beforeunload', () => Cookies.remove('token'));
   }, []);
 
   return (

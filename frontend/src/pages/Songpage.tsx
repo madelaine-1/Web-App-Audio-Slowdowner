@@ -4,37 +4,95 @@ import MediaControls from '../components/MediaControls'
 import LooperControls from '../components/LooperControls';
 import { ToneAudioBuffer, GrainPlayer } from 'tone';
 import styled from 'styled-components';
-
-const songUrl = './Tigran-Hamasyan-Blues-in-the-Closet.mp3';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { SERVER_URL } from '../shared functions/constants';
+import Cookies from 'js-cookie';
 
 const Songpage: FC = () => {
+    // props
+    const location = useLocation();
+    const {name, artist, id} = location.state;
+
     // States
     const [player, setPlayer] = useState<GrainPlayer>(new GrainPlayer());
     const buffer = useRef<ToneAudioBuffer>(new ToneAudioBuffer());
 
 
+
+
     useEffect(() => {
-        const getAudioFile = async () => {
+        let isMounted = true;
+
+        const getAudioBuffer = async () => {
             try {
-                buffer.current.dispose();
-                player.disconnect();
-                console.log('Loading buffer');
-                const newBuffer = await ToneAudioBuffer.fromUrl(songUrl);
-                console.log('Buffer loaded');
-                const newPlayer = new GrainPlayer(newBuffer).toDestination();
-                buffer.current = newBuffer;
-                setPlayer(newPlayer);
-                console.log('Player created');
+                const response = await axios({
+                method: 'get',
+                url: `${SERVER_URL}/songs/${id}`,
+                headers: {
+                    'Authorization': `Bearer ${Cookies.get("token")}`
+                },
+                responseType: "arraybuffer"
+                });
+        
+                const arrayBuffer = response.data;
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+                try {
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                    return audioBuffer;
+                } catch (error) {
+                console.error('Error decoding audio data:', error);
+                throw error;
+                } finally {
+                audioContext.close();
+                }
             } catch (error) {
-                buffer.current.dispose();
-                player.disconnect();
-                console.error(`Error getting audio file: ${error}`);
+                console.error('Error fetching audio file:', error);
                 throw error;
             }
         };
     
-        getAudioFile();
-    }, []);
+        const initializePlayer = async () => {
+        try {
+            if (!isMounted) {
+                return
+            }
+
+            if (buffer.current) {
+                buffer.current.dispose();
+                player.disconnect();
+            }
+    
+            console.log('Loading buffer');
+            const audioBuffer = await getAudioBuffer();
+            const newBuffer = new ToneAudioBuffer(audioBuffer);
+            console.log('Buffer loaded');
+            
+            const newPlayer = new GrainPlayer(newBuffer).toDestination();
+            buffer.current = newBuffer;
+            setPlayer(newPlayer);
+            console.log('Player created');
+        } catch (error) {
+            console.error(`Error initializing player: ${error}`);
+            throw error;
+        }
+        };
+    
+        initializePlayer();
+
+        return () => {
+            console.log("cleaning up...");
+            isMounted = false; // Mark the component as unmounted
+            if (buffer.current) {
+              buffer.current.dispose();
+            }
+            if (!player.disposed) {
+              player.disconnect();
+              player.dispose();
+            }
+          };
+    }, [id]);
 
     const handlePitchChange = (cents: number) => {
         player.detune = cents * 100;

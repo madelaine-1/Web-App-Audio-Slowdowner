@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class SongBase(BaseModel):
     name: str
     artist: str
+    fileType: str
     filePath: str
 
 class SongCreate(SongBase):
