@@ -1,8 +1,8 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { StyledButton } from "../styles/sharedStyles";
 import styled from "styled-components";
-import { uploadFile } from "../shared functions/sharedFunctions";
 import { StyledForm } from "../styles/sharedStyles";
+import useServer from "../Hooks/useServer";
 interface FileUploadProps {
     setUploadFile: Function
 }
@@ -12,11 +12,37 @@ const FileUpload:FC<FileUploadProps> = ({setUploadFile}) => {
     const [artist, setArtist] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
 
+    const {response, isLoading, error, fetchData} = useServer(
+            "songs/", 
+            "POST", 
+            null,
+            () => setUploadFile(false),
+            (error) => console.log(error)
+        );
+
+
+
     // uploads a new file to the server
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         
-        await uploadFile(name, artist, file);
+        const formData = new FormData();
+        formData.append("song_name", name);
+        formData.append("artist_name", artist)
+        if (file) {
+            formData.append('file', file);
+        } else {
+            return;
+        }
+
+        await fetchData(formData);
+
+        if (response) {
+            setUploadFile(false);
+        }
+        if (error) {
+            console.log(error);
+        }
     };
 
     return (

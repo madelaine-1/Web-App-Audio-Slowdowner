@@ -1,8 +1,7 @@
-import React, { FC,useState } from "react";
-import axios from "axios";
+import React, { FC,useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { StyledButton, StyledForm } from '../styles/sharedStyles';
-import { SERVER_URL } from "../shared functions/constants";
+import useServer from "../Hooks/useServer";
 
 const Signup: FC = () => {
     const navigate = useNavigate();
@@ -17,28 +16,31 @@ const Signup: FC = () => {
     const [passwordIncorrect, setPasswordIncorrect] = useState<boolean>(false);
     const [invalidEmail, setInvalidEmail] = useState<boolean>(false);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const {response, isLoading, error, fetchData} = useServer(
+        "users/", 
+        "POST", 
+        null, 
+        (response) => {
+            console.log(response.data);
+            navigate('/login');
+        }, 
+        (error) => {
+            console.log(error);
+        } );
+
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if(!verifyUserInput()) { return }
 
-        axios({
-            method: 'post',
-            url: `${SERVER_URL}/users/`, 
-            data: {
-                username: username, 
-                email: email, 
-                password: password
-            },
-        })
-            .then(res => {
-                console.log(res.data);
-                navigate('/login');
-            })
-            .catch(error => {
-                console.error(error);
-            }
-        );
+        let data = {
+            username: username,
+            email: email,
+            password: password
+        }
+
+        await fetchData(data);
     };
 
     const verifyUserInput = (): boolean => {

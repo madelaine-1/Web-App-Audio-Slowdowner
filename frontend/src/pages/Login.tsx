@@ -1,17 +1,37 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { StyledButton, StyledForm } from '../styles/sharedStyles';
-import { getUserToken } from "../shared functions/sharedFunctions";
+import useServer from "../Hooks/useServer";
+import Cookies from "js-cookie";
 
 const Login: FC = () => {
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [passwordIncorrect, setPasswordIncorrect] = useState<boolean>(false);
 
+    const {response, isLoading, error, fetchData} = useServer(
+        "users/token", 
+        "POST",
+        null,
+        (response) => {
+            console.log(response);
+            Cookies.set('token', response.access_token);
+            window.location.reload();
+        },
+        (error) => {
+            console.log(error);
+            setPasswordIncorrect(true);
+        }
+        );
+
     // Logs user in and gives
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-    
-        setPasswordIncorrect(await getUserToken(username, password));
+
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        await fetchData(formData);
     };
 
     return (

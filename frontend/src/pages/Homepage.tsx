@@ -6,6 +6,7 @@ import axios from 'axios';
 import { SERVER_URL } from '../shared functions/constants';
 import Cookies from 'js-cookie';
 import File from '../components/File';
+import useServer from '../Hooks/useServer';
 
 type Song = {
     name: string,
@@ -18,32 +19,23 @@ const Homepage: FC = () => {
     const [files, setFiles] = useState<Song[]>([]);
     const [uploadFile, setUploadFile] = useState<boolean>(false);
 
-    const getUser = async () => {
-        axios.get(`${SERVER_URL}/users/current`, {
-            headers: {
-                'Authorization': `Bearer ${Cookies.get("token")}`
+    const {fetchData} = useServer(
+        "songs/", 
+        "GET", 
+        null,
+        (response) => { 
+            if(Array.isArray(response)) {
+                setFiles(response); 
             }
-        })
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    };
+        },
+        (error) => { console.log(error) }
+        );
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: `${SERVER_URL}/songs/`,
-            headers: {
-                'Authorization': `Bearer ${Cookies.get("token")}`
-            }
-        })
-        .then(response => setFiles(response.data))
-        .catch(error => console.error(error));
-    }, []);
+        if(!uploadFile) {
+            fetchData(null);
+        }
+    }, [uploadFile]);
 
     return (
         <StyledHomepage>
