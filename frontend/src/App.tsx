@@ -1,16 +1,20 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import Homepage from './pages/Homepage';
-import Songpage from './pages/Songpage';
+import Homepage from './pages/Homepage/Homepage';
+import Songpage from './pages/Songpage/Songpage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import useServer from './Hooks/useServer';
 
 function App() {
+  const navigate = useNavigate();
+
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
-  const { response, fetchData, error } = useServer(
+
+
+  const { fetchData } = useServer(
     "users/validate-token", 
     "POST", 
     Cookies.get("token"), 
@@ -21,13 +25,14 @@ function App() {
     (error) => {
       console.log(error);
       setIsValidToken(false);
+      navigate("/login")
     });
 
     useEffect(() => {
       if (Cookies.get("token")) {
         fetchData(Cookies.get("token"));
       }
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
   <div className="App">

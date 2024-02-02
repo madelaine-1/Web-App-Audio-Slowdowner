@@ -1,8 +1,8 @@
-import React, { FC, useState, useEffect } from "react";
-import { StyledButton } from "../styles/sharedStyles";
+import React, { FC, useState } from "react";
+import { StyledButton } from "../../../styles/sharedStyles";
 import styled from "styled-components";
-import { StyledForm } from "../styles/sharedStyles";
-import useServer from "../Hooks/useServer";
+import { StyledForm } from "../../../styles/sharedStyles";
+import useServer from "../../../Hooks/useServer";
 interface FileUploadProps {
     setUploadFile: Function
 }
@@ -12,7 +12,7 @@ const FileUpload:FC<FileUploadProps> = ({setUploadFile}) => {
     const [artist, setArtist] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
 
-    const {response, isLoading, error, fetchData} = useServer(
+    const {fetchData} = useServer(
             "songs/", 
             "POST", 
             null,
@@ -36,13 +36,6 @@ const FileUpload:FC<FileUploadProps> = ({setUploadFile}) => {
         }
 
         await fetchData(formData);
-
-        if (response) {
-            setUploadFile(false);
-        }
-        if (error) {
-            console.log(error);
-        }
     };
 
     return (

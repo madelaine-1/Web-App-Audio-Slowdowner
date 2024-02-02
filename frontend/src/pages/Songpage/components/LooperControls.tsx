@@ -1,21 +1,20 @@
 import React, { FC, useState, useRef } from 'react';
-import { GrainPlayer } from 'tone';
 import styled from 'styled-components';
-import { StyledButton } from '../styles/sharedStyles';
-import { formatTime } from '../shared functions/sharedFunctions';
+import { StyledButton } from '../../../styles/sharedStyles';
+import { formatTime } from '../../../shared functions/sharedFunctions';
+import { ToneJS } from '../Music';
 
 interface LooperProps {
-    songLength: number;
-    player: GrainPlayer;
+    player: ToneJS;
 }
 
-const LooperControls:FC<LooperProps> = ({songLength, player}) => {
+const LooperControls:FC<LooperProps> = ({player}) => {
     /* State values:
         loopStart: time in seconds that loop should end 
         loopEnd: time in seconds that loop should end 
     */
     const [loopStart, setLoopStart] = useState(0);
-    const [loopEnd, setLoopEnd] = useState(songLength);
+    const [loopEnd, setLoopEnd] = useState(player.length);
     const [isLooping, setIsLooping] = useState(false);
 
     /* References to the HTML tags for the sliders */
@@ -52,10 +51,10 @@ const LooperControls:FC<LooperProps> = ({songLength, player}) => {
 
     const toggleLooping = async () => {
         await setIsLooping(!isLooping);
-        player.loopStart = await loopStart;
-        player.loopEnd = await loopEnd;
-        player.loop = isLooping;
-        console.log(`Is looping?: ${player.loop}`);
+        // player.loopStart = await loopStart;
+        // player.loopEnd = await loopEnd;
+        // player.loop = isLooping;
+        // console.log(`Is looping?: ${player.loop}`);
     };
 
     return (
@@ -69,7 +68,7 @@ const LooperControls:FC<LooperProps> = ({songLength, player}) => {
                 <StyledSlider 
                     type="range" 
                     min="0" 
-                    max={songLength} 
+                    max={player.length} 
                     value={loopStart} 
                     ref={startInputRef}
                     onChange={handleStartChange}
@@ -77,7 +76,7 @@ const LooperControls:FC<LooperProps> = ({songLength, player}) => {
                 <StyledSlider 
                     type="range" 
                     min="0" 
-                    max={songLength} 
+                    max={player.length} 
                     value={loopEnd} 
                     ref={endInputRef}
                     onChange={handleEndChange} 

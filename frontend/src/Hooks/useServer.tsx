@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 const SERVER_URL: string = "http://127.0.0.1:8000";
 
-const useServer = (path: string, httpMethod: string, data: any, onSuccess: (response: any) => void, onError: (error: any) => void) => {
+const useServer = (path: string, httpMethod: string, data: any, onSuccess: (response: any) =>  void, onError: (error: any) => void) => {
     const [response, setResponse] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<any>(null);
@@ -12,9 +12,10 @@ const useServer = (path: string, httpMethod: string, data: any, onSuccess: (resp
     const fetchData = async (new_data: any = null) => {
         setIsLoading(true);
 
-        if (new_data) { data = new_data}
+        if (new_data) {data = new_data}
 
         let headers = {}
+        
         if(Cookies.get("token")) {
             headers = {
                 'Authorization': `Bearer ${Cookies.get("token")}`,

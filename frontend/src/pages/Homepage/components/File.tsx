@@ -1,9 +1,7 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
-import { SERVER_URL } from "../shared functions/constants";
-import axios, { AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+
 interface FileProps {
     filename: string
     artist: string
@@ -26,7 +24,6 @@ const File: FC<FileProps> = ({ filename, artist, id }) => {
             } 
         });          
     };
-
 
     return(
         <StyledFile onClick={handleOpenFile}>

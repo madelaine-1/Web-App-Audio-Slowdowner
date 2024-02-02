@@ -1,5 +1,5 @@
 import React, {FC, ChangeEvent, useState, useEffect} from 'react';
-import { StyledSlider, StyledSliderIndexBox } from '../styles/sharedStyles';
+import { StyledSlider, StyledSliderIndexBox } from '../../../styles/sharedStyles';
 import styled from 'styled-components';
 
 interface SliderProps {

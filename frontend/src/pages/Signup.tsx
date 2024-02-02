@@ -1,4 +1,4 @@
-import React, { FC,useState, useEffect } from "react";
+import React, { FC,useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { StyledButton, StyledForm } from '../styles/sharedStyles';
 import useServer from "../Hooks/useServer";
@@ -16,7 +16,7 @@ const Signup: FC = () => {
     const [passwordIncorrect, setPasswordIncorrect] = useState<boolean>(false);
     const [invalidEmail, setInvalidEmail] = useState<boolean>(false);
 
-    const {response, isLoading, error, fetchData} = useServer(
+    const {fetchData} = useServer(
         "users/", 
         "POST", 
         null, 
