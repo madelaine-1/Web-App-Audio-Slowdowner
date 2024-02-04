@@ -5,6 +5,7 @@ import FileUpload from './components/FileUpload';
 import Sidebar from '../../components/Sidebar';
 import File from './components/File';
 import useServer from '../../Hooks/useServer';
+import { Icon } from '@iconify/react';
 
 type Song = {
     name: string,
@@ -40,9 +41,13 @@ const Homepage: FC = () => {
         <StyledHomepage>
             {sideBar && <Sidebar />}
             <div className='page-content'
-                style={sideBar ? {"width": "85vw"} : {"width": "100vw"}}
+                style={sideBar ? {"width": "83vw"} : {"width": "100vw"}}
             >
-                <button className="side-bar-toggle" onClick={() => {setSideBar( !sideBar ); console.log("Nav bar toggled")}} >SIDEBAR</button>
+                <Icon 
+                    className="side-bar-toggle"
+                    icon="material-symbols:menu"
+                    onClick={() => { setSideBar( !sideBar ) }} 
+                />
                 <div className='search-container'>
                     <input
                         className='search-box' 
@@ -51,7 +56,11 @@ const Homepage: FC = () => {
                         placeholder={"Search"}
                         onChange={(event: ChangeEvent<HTMLInputElement>) => setSearchInput(event.target.value)}
                     />
-                    <StyledButton onClick={() => setUploadFile(true) }> Upload File</StyledButton>
+                    <StyledButton onClick={() => setUploadFile(true) }> 
+                        <Icon 
+                            icon="material-symbols:upload"
+                        />
+                    </StyledButton>
                 </div>
                 {uploadFile && <FileUpload setUploadFile={setUploadFile}/>}
                 <div className='song-container'>
@@ -82,6 +91,8 @@ justify-content: center;
     .side-bar-toggle {
         background-color: none;
         position: absolute;
+        color: white;
+        font-size: 3em;
         left: 0;
         top: 0;
         padding: 5px;
@@ -109,15 +120,21 @@ justify-content: center;
         }
 
         button {
-            height: 4wh;
+            height: 4vh;
+            width: 8vw;
+            font-size: 2em;
         }
     }
 
     .song-container {
         margin-top: 12vh;
         width: 90%;
-        display: block;
-
+        height: 85vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        overflow-y: auto;
     }
 }
 `;

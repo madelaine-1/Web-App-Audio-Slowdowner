@@ -34,7 +34,7 @@ const File: FC<FileProps> = ({ filename, artist, id }) => {
 };
 
 const StyledFile = styled.div`
-    width: 100%;
+    width: 95%;
     height: 2vh;
     display: flex;
     margin-bottom: 1vh;

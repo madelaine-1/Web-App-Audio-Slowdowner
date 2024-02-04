@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { StyledButton, StyledSlider, StyledSliderIndexBox } from '../../../styles/sharedStyles';
 import { formatTime } from '../../../shared functions/sharedFunctions';
 import { ToneJS } from '../Music';
+import { Icon } from '@iconify/react';
 
 interface MediaControlsProps {
   player: ToneJS;
@@ -37,10 +38,26 @@ const MediaControls: FC<MediaControlsProps> = ({ player }) => {
         <div>{formatTime(player.length)}</div>
       </StyledSliderIndexBox>
       <StyledButtonContainer>
-        <StyledButton onClick={() => player.skipTo(0)}>Restart</StyledButton>
-        <StyledButton onClick={() => player.skipTo(player.currentTime - 5)}>Skip Back</StyledButton>
-        <StyledButton onClick={player.pausePlay}>Pause</StyledButton>
-        <StyledButton onClick={() => player.skipTo(player.currentTime + 5)}>Skip Forward</StyledButton>
+        <StyledButton onClick={() => player.skipTo(0)}>
+        <Icon
+            icon="iconamoon:restart-bold"
+          />
+        </StyledButton>
+        <StyledButton onClick={() => player.skipTo(player.currentTime - 5)}>
+        <Icon
+            icon="ph:skip-back-fill"
+          />
+        </StyledButton>
+        <StyledButton onClick={player.pausePlay}>
+          <Icon 
+            icon="ph:play-fill"
+          />
+        </StyledButton>
+        <StyledButton onClick={() => player.skipTo(player.currentTime + 5)}>
+          <Icon
+            icon="ph:skip-forward-fill"
+          />
+        </StyledButton>
       </StyledButtonContainer>
     </StyledMediaControls>
   );
@@ -71,4 +88,8 @@ const StyledButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+
+  button {
+    font-size: 2em;
+  }
 `;
