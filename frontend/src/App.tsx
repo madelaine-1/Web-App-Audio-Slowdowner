@@ -7,6 +7,7 @@ import Signup from './pages/Signup';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import useServer from './Hooks/useServer';
+import Aboutpage from './pages/Aboutpage';
 
 function App() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ function App() {
         <>
           <Route path='/home' element={<Homepage />} />
           <Route path='/song' element={<Songpage />} />
+          <Route path='/about' element={<Aboutpage />} />
           <Route path="*" element={<Navigate to="/home" replace/>} />
         </>
       ) : (

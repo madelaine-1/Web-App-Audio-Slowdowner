@@ -1,15 +1,13 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, FC } from 'react';
 import Slider from './components/Slider'
 import MediaControls from './components/MediaControls'
 import LooperControls from './components/LooperControls';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { SERVER_URL } from '../../shared functions/constants';
-import Cookies from 'js-cookie';
 import { ToneJS } from './Music';
 import Sidebar from '../../components/Sidebar';
 import { Icon } from '@iconify/react';
+import useLoadSong from './useLoadSong';
 
 const Songpage: FC = () => {
     // props
@@ -17,63 +15,8 @@ const Songpage: FC = () => {
     const {name, artist, id} = location.state;
 
     // States
-    const [player, setPlayer] = useState<ToneJS | null>(null);
     const [sideBar, setSideBar] = useState<boolean>(false);
-
-    useEffect(() => {
-        let isMounted = true;
-
-        const getAudioBuffer = async () => {
-            try {
-                const response = await axios({
-                    method: 'get',
-                    url: `${SERVER_URL}/songs/${id}`,
-                    headers: {
-                        'Authorization': `Bearer ${Cookies.get("token")}`
-                    },
-                    responseType: "arraybuffer"
-                });
-        
-                const arrayBuffer = response.data;
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-                try {
-                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                    return audioBuffer;
-                } catch (error) {
-                console.error('Error decoding audio data:', error);
-                throw error;
-                } finally {
-                audioContext.close();
-                }
-            } catch (error) {
-                console.error('Error fetching audio file:', error);
-                throw error;
-            }
-        };
-    
-        const initializePlayer = async () => {
-        try {
-            if (!isMounted) {
-                return
-            }
-
-            const audioBuffer = await getAudioBuffer();
-            const player = new ToneJS(audioBuffer);
-
-            setPlayer(player);
-            } catch (error) {
-                console.error(`Error initializing player: ${error}`);
-                throw error;
-            }
-        };
-    
-        initializePlayer();
-
-        return () => {
-            player?.cleanUp();
-          };
-    }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+    const player = useLoadSong(id);
 
 
     const handleSpeedChange = (speed: number) => {
@@ -119,7 +62,7 @@ const Songpage: FC = () => {
                                 min={-50}
                                 max={50}
                                 step={1}
-                                onChange={value => player?.changePitch(value)}
+                                onChange={value => player.changePitch(value)}
                             />
                             <Slider
                                 title={"Volume"} 
@@ -127,7 +70,7 @@ const Songpage: FC = () => {
                                 min={0}
                                 max={100}
                                 step={1}
-                                onChange={value =>  player?.changeVolume(value)}
+                                onChange={value =>  player.changeVolume(value)}
                             />
                         </div>
                         <div className='media-controls-container'>

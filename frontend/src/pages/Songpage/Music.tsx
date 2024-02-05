@@ -45,7 +45,7 @@ export class ToneJS implements Music {
         }
     }
 
-    cleanUp = () => {
+    cleanUp = async () => {
         try {
             this.player?.disconnect();
             this.buffer?.dispose();
@@ -83,6 +83,7 @@ export class ToneJS implements Music {
         this.currentTime = newTime;
 
         if (this.isPlaying) {
+            this.player.stop();
             this.player.start(undefined, newTime);
         }
 

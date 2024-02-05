@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent, KeyboardEvent } from 'react';
+import React, { FC, ChangeEvent, KeyboardEvent, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { StyledButton, StyledSlider, StyledSliderIndexBox } from '../../../styles/sharedStyles';
 import { formatTime } from '../../../shared functions/sharedFunctions';
@@ -10,6 +10,18 @@ interface MediaControlsProps {
 }
 
 const MediaControls: FC<MediaControlsProps> = ({ player }) => {
+  const [currentTime, setCurrentTime] = useState<number>(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (player) {
+                setCurrentTime(player.currentTime);
+            }
+        }, 500);
+    
+        // Clear interval on cleanup
+        return () => clearInterval(interval);
+    }, [player]);
 
   const handleSpacebarPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === ' ' || event.key === 'Spacebar') {
@@ -27,7 +39,7 @@ const MediaControls: FC<MediaControlsProps> = ({ player }) => {
       <StyledTitle>{formatTime(player.currentTime)}</StyledTitle>
       <StyledSlider 
         type="range"
-        value={player.currentTime}
+        value={currentTime}
         min={0}
         max={player.length}
         step={.5}

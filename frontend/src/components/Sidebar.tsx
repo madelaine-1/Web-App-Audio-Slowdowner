@@ -10,7 +10,7 @@ const Sidebar: FC = () => {
     const signOut = () => {
         console.log("Signing out");
         Cookies.remove("token");
-        navigate("/login")
+        window.location.reload();
     };
 
     return (
@@ -20,7 +20,7 @@ const Sidebar: FC = () => {
                 <div onClick={() => navigate("/home")}>Home</div>
                 <div onClick={signOut}>Sign out</div>
                 <div>Report a bug</div>
-                <div>About</div>
+                <div onClick={() => navigate("/about")}>About</div>
             </div>
         </StyledSidebar>
     );

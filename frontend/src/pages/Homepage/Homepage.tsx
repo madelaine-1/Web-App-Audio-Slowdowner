@@ -35,7 +35,7 @@ const Homepage: FC = () => {
         if(!uploadFile) {
             fetchData(null);
         }
-    }, [uploadFile]);
+    }, [uploadFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <StyledHomepage>
@@ -64,7 +64,11 @@ const Homepage: FC = () => {
                 </div>
                 {uploadFile && <FileUpload setUploadFile={setUploadFile}/>}
                 <div className='song-container'>
-                    {files.map((file, index) => (<File key={index} filename={file.name} artist={file.artist} id={file.id} />))}
+                    {files.length === 0 ? 
+                        <div style={{"color": "white"}}>No available files</div> 
+                        : 
+                        files.map((file, index) => ((file.name.toLowerCase().includes(searchInput.toLowerCase()) || file.artist.toLowerCase().includes(searchInput.toLowerCase())) && <File key={index} filename={file.name} artist={file.artist} id={file.id} />))
+                    }
                 </div>
             </div>
         </StyledHomepage>
@@ -102,13 +106,13 @@ justify-content: center;
     .search-container {
         position: absolute;
         top: 0;
-        width: 100%;
+        width: 87%;
         padding: 20px;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
 
         .search-box {
-            width: 70%;
+            width: 85%;
             height: 4vh;
             border: none;
             border-radius: .5vh;

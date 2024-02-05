@@ -45,6 +45,11 @@ const StyledFile = styled.div`
     background-color: blue;
     color: white;
     font-weight: bold;
+    transition-duration: 250ms;
+
+    &:hover {
+        background-color: rgb(0,0,200);
+    }
 `;
 
 export default File;
