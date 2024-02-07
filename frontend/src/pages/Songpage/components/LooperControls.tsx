@@ -2,10 +2,10 @@ import React, { FC, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { StyledButton } from '../../../styles/sharedStyles';
 import { formatTime } from '../../../shared functions/sharedFunctions';
-import { ToneJS } from '../Music';
+import { Music } from '../Music';
 
 interface LooperProps {
-    player: ToneJS;
+    player: Music;
 }
 
 const LooperControls:FC<LooperProps> = ({player}) => {

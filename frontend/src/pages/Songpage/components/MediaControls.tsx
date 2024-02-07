@@ -2,11 +2,11 @@ import React, { FC, ChangeEvent, KeyboardEvent, useState, useEffect } from 'reac
 import styled from 'styled-components';
 import { StyledButton, StyledSlider, StyledSliderIndexBox } from '../../../styles/sharedStyles';
 import { formatTime } from '../../../shared functions/sharedFunctions';
-import { ToneJS } from '../Music';
+import { Music } from '../Music';
 import { Icon } from '@iconify/react';
 
 interface MediaControlsProps {
-  player: ToneJS;
+  player: Music;
 }
 
 const MediaControls: FC<MediaControlsProps> = ({ player }) => {

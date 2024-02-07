@@ -4,7 +4,7 @@ import MediaControls from './components/MediaControls'
 import LooperControls from './components/LooperControls';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import { ToneJS } from './Music';
+import { FastFourier, Music } from './Music';
 import Sidebar from '../../components/Sidebar';
 import { Icon } from '@iconify/react';
 import useLoadSong from './useLoadSong';
@@ -25,7 +25,7 @@ const Songpage: FC = () => {
 
     return (
         <StyledSongPage className="App">
-            {player instanceof ToneJS ? (
+            {player !== null ? (
                 <>
                     {sideBar && <Sidebar />}
                     <div 

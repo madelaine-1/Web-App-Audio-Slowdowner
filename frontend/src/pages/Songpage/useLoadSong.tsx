@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { ToneJS } from './Music';
+import { FastFourier } from './Music';
 import Cookies from "js-cookie";
 import axios from "axios";
 import { SERVER_URL } from "../../shared functions/constants";
 
 const useLoadSong = ( id: number ) => {
-    const [player, setPlayer] = useState<ToneJS | null>(null);
-    const playerRef = useRef<ToneJS | null>(null);
+    const [player, setPlayer] = useState<FastFourier | null>(null);
+    const playerRef = useRef<FastFourier | null>(null);
 
     useEffect(() => {
         let isMounted = true;
@@ -47,7 +47,7 @@ const useLoadSong = ( id: number ) => {
                 }
     
                 const audioBuffer = await getAudioBuffer();
-                const newPlayer = new ToneJS(audioBuffer);
+                const newPlayer = new FastFourier(audioBuffer);
     
                 setPlayer(newPlayer);
                 playerRef.current = newPlayer;
