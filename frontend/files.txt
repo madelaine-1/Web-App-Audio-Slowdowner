@@ -1,0 +1,97 @@
+import React, { FC, useState } from 'react';
+import styled from 'styled-components';
+
+interface DirectoryProps {
+    directory: FileSystemHandle;
+};
+
+const Directory:FC<DirectoryProps> = ({ directory }) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [children, setChildren] = useState<Array<FileSystemEntry> | null>(null);
+
+    const getSubDirectories = async () => {
+        setIsOpen(!isOpen);
+        if (children === null) {
+            try {
+                if (!isOpen) {
+                    console.log("opening subdirectories of", directory.name);
+                    const entries = [];
+                    for await (const entry of (directory as any).values()) {
+                        entries.push(entry);
+                    }
+                    await setChildren(entries);
+                }
+            } catch (err) {
+                console.error('Error fetching children:', err);
+            }
+        }
+    };
+
+    return (
+        <div>
+            <StyledDirectory onClick={getSubDirectories}>
+                <div>{directory.name}</div>
+                <div>📁</div>
+            </StyledDirectory>
+            <StyledSubdirectories isOpen={isOpen}>
+                {isOpen && children && children.map((directory: any) => <Directory directory={directory} />)}
+            </StyledSubdirectories>
+        </div>
+    );
+};
+
+const StyledDirectory = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: blue;
+`;
+
+const StyledSubdirectories = styled.div`
+    margin-left: 1vw;
+    max-height: ${props => props.isOpen ? '10000px' : '0'};
+    transition: max-height 0.5s ease-in-out;
+    overflow: hidden;
+`;
+
+export default Directory;
+
+
+
+
+
+
+
+
+
+
+import React, { FC } from 'react';
+import styled from 'styled-components';
+
+interface FileProps {
+    file: FileSystemHandle;
+};
+
+const File:FC<FileProps> = ({ file }) => {
+    const handleOpenFile = () => {
+
+    };
+
+    return (
+        <StyledDirectory onClick={handleOpenFile}>
+            <div>{file.name}</div>
+            <div>🎵</div>
+        </StyledDirectory>
+    );
+};
+
+const StyledDirectory = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: red;
+`;
+
+export default File;
